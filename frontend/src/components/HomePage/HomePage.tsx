@@ -1,8 +1,9 @@
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { Button, ThemeProvider, User, UserLabel, Tooltip, ArrowToggle, Icon } from '@gravity-ui/uikit';
+import { useEffect, useState } from "react";
+import { Button, ThemeProvider, Table, withTableActions,ArrowToggle, Icon, RenderRowActionsProps} from '@gravity-ui/uikit';
+import { TextInput, UserLabel, Tooltip} from "@gravity-ui/uikit";
 import {CircleQuestion} from '@gravity-ui/icons';
-import { AuthContext } from '../../AppContexts/AppContext';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import {Magnifier} from '@gravity-ui/icons';
 
 import './HomePage.scss';
 
@@ -20,6 +21,7 @@ export const HomePage: React.FC = () => {
 
     const[Firstname, setFirstName] = useState('')
     const[Lastname, setLastName] = useState('')
+    const[Patients, setPatients] = useState([])
 
     const navigate = useNavigate();
 
@@ -75,10 +77,59 @@ export const HomePage: React.FC = () => {
         })
     }
 
-    // function logout(){
-    //     navigate('/login/')
-    // }
+    const getRowActions = () => {
+        return [
+          {
+            text: 'Принять',
+            handler: () => {
+                alert("Принято")
+            },
+          },
+        ];
+      };
+      
 
+    const MyTable = withTableActions(Table);
+    const RowAction = ({item}: RenderRowActionsProps<Item>) => {
+        const handleAcceptButton = () => {
+            alert(`Принимаю : ${item.first_name}`);
+        }
+        return <Button onClick={handleAcceptButton}>{`Принять`}</Button>;
+    };
+
+    const columns = [
+        {
+            name: "Фамилия", 
+            id: 'last_name'
+        },
+        {
+            name: "Имя", 
+            id: 'first_name'
+        },
+        {
+            name:"Отчество",
+            id: 'patronym'
+        },
+        {
+            name:"Дата рождения",
+            id: 'birth_date'
+        }
+    ];
+
+    const getPatients = () =>{
+        
+        axios.get(serverUrl + 'api/patients', {
+            withCredentials:true,
+            headers:{
+                "Content-Type":"application/json",
+            },
+        })
+        .then((res)=>{
+            //setPatients(JSON.stringify(res.data))
+            setPatients(res.data)
+        })
+        
+    }
 
     useEffect(() => {
         const checkAuthorization = async () => {
@@ -87,6 +138,7 @@ export const HomePage: React.FC = () => {
             setIsAuth(response.data.isAuthenticated)
         }
         checkAuthorization()
+        getPatients()
     }, [])
 
     if(isAuth === null){
@@ -97,7 +149,13 @@ export const HomePage: React.FC = () => {
         navigate('/login')
     }
 
-    getInfo()
+
+
+    if(isAuth === true){
+        getInfo()
+    }
+
+   
 
     return(   
         <ThemeProvider theme='light'>
@@ -139,8 +197,19 @@ export const HomePage: React.FC = () => {
                         </div>
                     </div>
                 </nav>
-                <h1>Привет {Firstname} {Lastname}</h1>
 
+                <div className="journal">
+                    <div className='search-element'>
+                        <div className='search-input'>
+                            <TextInput size='l' placeholder='ФИО пациента'/>
+                        </div>
+                        <Button view="outlined-action" size="l">
+                            <Icon data={Magnifier} size={18} />
+                            Найти
+                        </Button>
+                    </div>
+                    <MyTable data={Patients} columns={columns} renderRowActions={RowAction} getRowActions={getRowActions}/>
+                </div>
             </div>
         </ThemeProvider>
     )

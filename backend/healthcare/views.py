@@ -5,13 +5,10 @@ from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.contrib.sessions.models import Session
+from rest_framework.renderers import JSONRenderer
 
-
-def test(request):
-    token = get_token(request)
-    print(token)
-    return JsonResponse({'data': 'This is test response'})
-
+from .serializers import PatientSerializer
+from .models import Patient
 
 # Декоратор для выдачи ошибки если пользователь неавторизован
 def json_login_required(view_func):
@@ -25,7 +22,6 @@ def get_csrf(request):
     response = JsonResponse({'detail': 'CSRF cookie set'})
     s = get_token(request)
     response['X-CSRFToken'] = s
-    print(s)
     return response
 
 @require_POST
@@ -70,6 +66,12 @@ def session_view(request):
 @json_login_required
 def user_info(request):
     return JsonResponse({'username': request.user.username, 'firstname': request.user.first_name, 'lastname': request.user.last_name})
+
+@json_login_required
+def get_patients(request):
+    patients_from_db = Patient.objects.all()
+    serialized = PatientSerializer(patients_from_db, many=True) 
+    return JsonResponse(serialized.data,safe=False)
 
   
 # Удаление всех сессий из БД

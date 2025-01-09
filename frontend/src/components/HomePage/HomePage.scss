@@ -36,3 +36,18 @@
 .navbar-right > div {
     margin: 5px;
 }
+
+.search-element{
+   
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+}
+
+.journal{    
+    margin: 15px;
+}
+
+.search-input{
+    width: 50%;
+}
