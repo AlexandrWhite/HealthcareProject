@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import {LoginPage} from './components/LoginPage';
 import { HomePage } from './components/HomePage';
+import { PatientPage } from './components/PatientPage';
 import { AuthContext } from "./AppContexts/AppContext";
 import { useState} from "react";
 
@@ -21,6 +22,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/patient/:patientId" element={<PatientPage/>}/>
             </Routes>
         </BrowserRouter>
         </AuthContext.Provider>
