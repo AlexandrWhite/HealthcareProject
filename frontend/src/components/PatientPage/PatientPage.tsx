@@ -2,8 +2,10 @@ import { ThemeProvider } from "@gravity-ui/uikit";
 import { useEffect, useState } from "react";
 import {useParams,useNavigate} from 'react-router-dom'
 import {Spin} from '@gravity-ui/uikit';
+import {DisplayPulse} from '@gravity-ui/icons';
 
 import axios from "axios";
+import { AsideHeader, Settings } from "@gravity-ui/navigation";
 const serverUrl = 'http://localhost:8000/'
 
 
@@ -53,7 +55,44 @@ export const PatientPage: React.FC = () =>{
 
     return (
         <ThemeProvider theme="light">
-            <h1>{curPatient['last_name']+" "+curPatient['first_name'] + " "+curPatient['patronym']}</h1>
+            {/* <Settings filterPlaceholder="Найти параметр" 
+            title={curPatient['last_name']+" "+curPatient['first_name'] + " "+curPatient['patronym']}>
+                <Settings.Group groupTitle="Test">
+                    <Settings.Page title="MyTest">
+                        ...
+                    </Settings.Page>
+                </Settings.Group>
+            </Settings> */}
+            <AsideHeader compact={false} hideCollapseButton={true}
+                logo={{
+                    text:curPatient['last_name']+" "+curPatient['first_name'] + " "+curPatient['patronym']
+                }}
+                menuItems={[
+                    {
+                        id:"infoPatient",
+                        title:"Информация о пациенте",
+                    },
+                    {
+                        id:"vitalParams",
+                        title:"Витальные параметры",
+                    },
+                    {
+                        id: 'divider',
+                        title: '-',
+                        type: 'divider',
+                    },
+                    {
+                        id:"diagnos",
+                        title:"Поставить диагноз",
+                        type:'action',
+                        icon:DisplayPulse,
+                        onItemClick(){
+                            alert("Куда жмешь?")
+                        }
+                    }
+                ]}
+            >
+            </AsideHeader>
         </ThemeProvider>
     )
 }
