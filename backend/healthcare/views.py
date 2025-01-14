@@ -73,6 +73,10 @@ def get_patients(request):
     serialized = PatientSerializer(patients_from_db, many=True) 
     return JsonResponse(serialized.data,safe=False)
 
+@json_login_required
+def test(request,id):
+    my_object = Patient.objects.filter(pk=id).first()
+    return JsonResponse(PatientSerializer(my_object).data)
   
 # Удаление всех сессий из БД
 # Вы можете переделать так, чтобы отзывать сессию у определённого пользователя

@@ -76,23 +76,12 @@ export const HomePage: React.FC = () => {
             setLastName(res.data['lastname'])
         })
     }
-
-    const getRowActions = () => {
-        return [
-          {
-            text: 'Принять',
-            handler: () => {
-                alert("Принято")
-            },
-          },
-        ];
-      };
-      
-
+     
     const MyTable = withTableActions(Table);
     const RowAction = ({item}: RenderRowActionsProps<Item>) => {
         const handleAcceptButton = () => {
-            alert(`Принимаю : ${item.first_name}`);
+            //alert(`Принимаю : ${item.first_name} ${item.id}`);
+            navigate('/patient/'+item.id)
         }
         return <Button onClick={handleAcceptButton}>{`Принять`}</Button>;
     };
@@ -208,7 +197,7 @@ export const HomePage: React.FC = () => {
                             Найти
                         </Button>
                     </div>
-                    <MyTable data={Patients} columns={columns} renderRowActions={RowAction} getRowActions={getRowActions}/>
+                    <MyTable data={Patients} columns={columns} renderRowActions={RowAction}/>
                 </div>
             </div>
         </ThemeProvider>

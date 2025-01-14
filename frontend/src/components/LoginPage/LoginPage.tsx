@@ -75,7 +75,6 @@ export const LoginPage: React.FC = () => {
             setIsAuth(true)
             navigate('/', { replace: true })
         }).catch((err)=>{
-            //alert(JSON.stringify(err.response.data));
             setIsErrorMessageVisible(true);
         });
     }

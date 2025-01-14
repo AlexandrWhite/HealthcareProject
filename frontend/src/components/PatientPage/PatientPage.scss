@@ -1,0 +1,54 @@
+.base {
+    width: 40%; /* Устанавливаем ширину 40% от ширины экрана */
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Центрируем содержимое по вертикали */
+}
+
+.patient-name {
+    font-size: 20px; /* Размер шрифта для имени */
+    margin-bottom: 5px; /* Уменьшаем отступ */
+    text-align: left; /* Выравнивание имени по левому краю */
+}
+
+.patient-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px; /* Уменьшаем отступ между строками */
+}
+
+.info-item {
+    flex: 1;
+    margin-right: 5px; /* Уменьшаем отступ между элементами */
+}
+
+.info-item:last-child {
+    margin-right: 0; /* Убираем отступ у последнего элемента */
+}
+
+.single-row {
+    justify-content: center; /* Центрируем единственную строку */
+}
+
+.full-width {
+    flex-basis: 100%; /* Занимаем всю ширину для телефона */
+}
+
+.info-item h2 {
+    font-size: 16px; /* Размер шрифта заголовков */
+    color: #333;
+}
+
+.info-item p {
+    font-size: 14px; /* Размер шрифта текста */
+    color: #555;
+}
