@@ -1,8 +1,8 @@
 Запуситить Django сервер
 ```
-python -m venv .venv 
-pip install -r requirements.txt
+python -m venv .venv
 source .venv/bin/activate 
+pip install -r requirements.txt
 python backend/manage.py runserver 
 ```
 
