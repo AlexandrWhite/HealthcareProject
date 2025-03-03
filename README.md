@@ -15,4 +15,4 @@ npm run dev
 
 Перейти на страницу 
 
-<https://localhost:5173>
+<http://localhost:5173>
