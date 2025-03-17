@@ -127,8 +127,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CSRF_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SAMESITE = 'Lax'
+
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Чтобы cookie не были доступны из JS, нужен атрибут HttpOnly
 CSRF_COOKIE_HTTPONLY = True
@@ -136,15 +140,17 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_USE_SESSIONS = True
 
 
+
+
 # Домены, которым мы доверяем
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173','http://127.0.0.1:5173']
 
 
 # Разрешаем межсайтовые запросы для домена, на котором находится React приложение
 
 CORS_ALLOWED_ORIGINS = [
-  'http://localhost:5173',
-  'http://127.0.0.1:3000'
+  'http://127.0.0.1:5173',
+  'http://localhost:5173'
 ]
 
 
