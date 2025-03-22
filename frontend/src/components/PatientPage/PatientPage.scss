@@ -52,3 +52,13 @@
     font-size: 14px; /* Размер шрифта текста */
     color: #555;
 }
+
+#results-table tr:hover td{
+    background-color: rgb(196, 255, 201);
+}
+
+#results-table {
+    margin: 30px;
+    border-collapse: collapse;
+}
+

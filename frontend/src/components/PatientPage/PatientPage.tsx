@@ -1,4 +1,4 @@
-import { Button, Lang, Select, TextArea, TextInput, ThemeProvider } from "@gravity-ui/uikit";
+import { Button, Lang, Modal, Select, TextArea, TextInput, ThemeProvider } from "@gravity-ui/uikit";
 import { useEffect, useState } from "react";
 import {useParams,useNavigate} from 'react-router-dom'
 import {Spin} from '@gravity-ui/uikit';
@@ -33,6 +33,7 @@ export const PatientPage: React.FC = () =>{
 
     const[Firstname, setFirstName] = useState('')
     const[Lastname, setLastName] = useState('')
+    const [open, setOpen] = useState(false);
 
     const { patientId } = useParams();
     const navigate = useNavigate();
@@ -227,31 +228,188 @@ return (
                                     <p>Гематология</p>
                                 </Settings.Item>
 
-                                <Settings.Item title="Основной диагноз">
-                                    <Settings.Section title="">
-                                        <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
-                                            <TextInput/>
-                                            <Button children={"Поставить диагноз"} view="action"/>
-                                        </div>
-                                    </Settings.Section>                                
-                                </Settings.Item>
+                                
 
-                                <Settings.Item title="Характер заболевания">
-                                    <Select width={370}>
-                                        <Select.Option value="pain">Острое</Select.Option>
-                                        <Select.Option value="first_time">Впервые в жизни установленное хроническое</Select.Option>
-                                        <Select.Option value="early">Ранее установленное хроническое</Select.Option>
-                                    </Select>
-                                </Settings.Item>
+                                
+                                <Settings.Section title="Осмотр пациента">       
+                                    <TextArea minRows={20} 
+                                    defaultValue={planStr}/>
+                                </Settings.Section>
 
-                                <Settings.Item title="Состояние пациента">
-                                    <Select width={370}>
-                                        <Select.Option value="pain">Удовлетворительное</Select.Option>
-                                        <Select.Option value="first_time">Средней тяжести</Select.Option>
-                                        <Select.Option value="early">Тяжелое</Select.Option>
-                                        <Select.Option value="pain">Крайне тяжелое</Select.Option>
-                                        <Select.Option value="first_time">Клиническая смерть</Select.Option>
-                                    </Select>
+
+                                
+                               
+
+
+                                <Settings.Item title="Лабораторные исследования">    
+                                    <Button view="outlined-info" onClick={() => setOpen(true)}>
+                                        Открыть
+                                    </Button>
+
+                                    <Modal open={open} onClose={() => setOpen(false)}>
+                                    <table id="results-table">
+                                        <tr>
+                                            <th>Код</th>
+                                            <th>Наименование лабораторного исследования</th>
+                                            <th>Референсные измерения</th>
+                                            <th>Ед. измерения</th>
+                                            <th>Результат</th>
+                                            <th>Дата исследования</th>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.003</td>
+                                            <td>Исследование уровня общего гемоглобина в крови</td>
+                                            <td>120-140 (ж), 135-160 (м)</td>
+                                            <td>г/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.118</td>
+                                            <td>Исследование уровня эритроцитов в крови</td>
+                                            <td>3,9-4,7 (ж), 4-5 (м)</td>
+                                            <td>*10^12/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.119</td>
+                                            <td>Исследование уровня лейкоцитов в крови</td>
+                                            <td>4-9</td>
+                                            <td>*10^9/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.120</td>
+                                            <td>Исследование уровня тромбоцитов в крови</td>
+                                            <td>150-400</td>
+                                            <td>*10^9/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.117</td>
+                                            <td>Оценка гематокрита</td>
+                                            <td>36-42 (ж), 40-54 (м)</td>
+                                            <td>%</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.282.001</td>
+                                            <td>Определение среднего содержания гемоглобина в эритроцитах (MCH)</td>
+                                            <td>24-34</td>
+                                            <td>пг</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.282.002</td>
+                                            <td>Средняя концентрация гемоглобина в эритроцитах (MCHC)</td>
+                                            <td>300-380</td>
+                                            <td>г/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.124.001</td>
+                                            <td>Средний объем эритроцитов (MCV)</td>
+                                            <td>75-95</td>
+                                            <td>фл</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>—</td>
+                                            <td>Цветовой показатель</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.007</td>
+                                            <td>Исследование уровня железа в сыворотке крови</td>
+                                            <td>6,6 – 26 (м), 11 – 28 (ж)</td>
+                                            <td>мкмоль/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.011</td>
+                                            <td>Исследование железосвязывающей способности сыворотки (ОЖСС)</td>
+                                            <td>45,3-77,1</td>
+                                            <td>мкмоль/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.076</td>
+                                            <td>Исследование уровня ферритина в крови</td>
+                                            <td>10-120 (ж), 20-250 (м)</td>
+                                            <td>мкг/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.06.060</td>
+                                            <td>Определение уровня витамина B12 (цианокобаламин) в крови</td>
+                                            <td>197-771</td>
+                                            <td>пг/мл</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.021</td>
+                                            <td>Исследование уровня общего билирубина в крови</td>
+                                            <td>2-21</td>
+                                            <td>мкмоль/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.010</td>
+                                            <td>Исследование уровня общего белка в крови</td>
+                                            <td>65-85</td>
+                                            <td>г/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.080</td>
+                                            <td>Исследование уровня фолиевой кислоты в сыворотке крови</td>
+                                            <td>3 - 17</td>
+                                            <td>нг/мл</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A09.05.011</td>
+                                            <td>Исследование уровня альбумина в крови</td>
+                                            <td>35-53</td>
+                                            <td>г/л</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A08.05.001</td>
+                                            <td>Цитологическое исследование мазка костного мозга (миелограмма)</td>
+                                            <td>0 - норма, 1-угнетение более 2-х ростков, 0,5 - изолированное угнетение красного ростка</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A12.05.009</td>
+                                            <td>Прямой антиглобулиновый тест (прямая проба Кумбса)</td>
+                                            <td>0-отриц, 1-+/слабо+</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                        </tr>
+                                    </table>
+                                    </Modal>
                                 </Settings.Item>
 
                                 <Settings.Item title="Клинический диагноз">
@@ -259,16 +417,46 @@ return (
                                         <TextInput/>
                                     </div>                                
                                 </Settings.Item>
-                                
-                               
-                                <Settings.Section title="Осмотр пациента">       
-                                    <TextArea minRows={20} 
-                                    defaultValue={planStr}/>
-                                </Settings.Section>
+
+                                <Settings.Item title="Основной диагноз">
+                                <Settings.Section title="">
+                                    <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
+                                        <TextInput/>
+                                        <Button children={"Поставить диагноз"} view="action"/>
+                                    </div>
+                                </Settings.Section>                                
+                            </Settings.Item>
+
+                            <Settings.Item title="Характер заболевания">
+                                <Select width={370}>
+                                    <Select.Option value="pain">Острое</Select.Option>
+                                    <Select.Option value="first_time">Впервые в жизни установленное хроническое</Select.Option>
+                                    <Select.Option value="early">Ранее установленное хроническое</Select.Option>
+                                </Select>
+                            </Settings.Item>
+
+                            <Settings.Item title="Состояние пациента">
+                                <Select width={370}>
+                                    <Select.Option value="pain">Удовлетворительное</Select.Option>
+                                    <Select.Option value="first_time">Средней тяжести</Select.Option>
+                                    <Select.Option value="early">Тяжелое</Select.Option>
+                                    <Select.Option value="pain">Крайне тяжелое</Select.Option>
+                                    <Select.Option value="first_time">Клиническая смерть</Select.Option>
+                                </Select>
+                            </Settings.Item>
+
+                            <Settings.Item title="Клинический диагноз">
+                                <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
+                                    <TextInput/>
+                                </div>                                
+                            </Settings.Item>
 
                                 <Button view="outlined-success" children="Закрыть случай" size="l"/>
+                                <Button view="outlined-info" children="Получить  справку" size="l"/>
                             </Settings.Section>
                         </Settings.Page>
+
+                        
 
                         <Settings.Page title="Опрос пациента">
 
@@ -369,38 +557,7 @@ return (
                                 <p>Гематология</p>
                             </Settings.Item>
 
-                            <Settings.Item title="Основной диагноз">
-                                <Settings.Section title="">
-                                    <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
-                                        <TextInput/>
-                                        <Button children={"Поставить диагноз"} view="action"/>
-                                    </div>
-                                </Settings.Section>                                
-                            </Settings.Item>
-
-                            <Settings.Item title="Характер заболевания">
-                                <Select width={370}>
-                                    <Select.Option value="pain">Острое</Select.Option>
-                                    <Select.Option value="first_time">Впервые в жизни установленное хроническое</Select.Option>
-                                    <Select.Option value="early">Ранее установленное хроническое</Select.Option>
-                                </Select>
-                            </Settings.Item>
-
-                            <Settings.Item title="Состояние пациента">
-                                <Select width={370}>
-                                    <Select.Option value="pain">Удовлетворительное</Select.Option>
-                                    <Select.Option value="first_time">Средней тяжести</Select.Option>
-                                    <Select.Option value="early">Тяжелое</Select.Option>
-                                    <Select.Option value="pain">Крайне тяжелое</Select.Option>
-                                    <Select.Option value="first_time">Клиническая смерть</Select.Option>
-                                </Select>
-                            </Settings.Item>
-
-                            <Settings.Item title="Клинический диагноз">
-                                <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
-                                    <TextInput/>
-                                </div>                                
-                            </Settings.Item>
+                            
                             
                             <Button view="outlined-success" children="Закрыть случай" size="l"/>
                         </Settings.Section>
