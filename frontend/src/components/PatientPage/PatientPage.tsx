@@ -1,6 +1,6 @@
-import { Button, Lang, Modal, Select, TextArea, TextInput, ThemeProvider } from "@gravity-ui/uikit";
+import { Button, eventBroker, Lang, Modal, Select, TextArea, TextInput, ThemeProvider } from "@gravity-ui/uikit";
 import { useEffect, useState } from "react";
-import {useParams,useNavigate} from 'react-router-dom'
+import {useParams,useNavigate, data} from 'react-router-dom'
 import {Spin} from '@gravity-ui/uikit';
 import {DisplayPulse} from '@gravity-ui/icons';
 import { useRef } from 'react';
@@ -30,6 +30,7 @@ export const PatientPage: React.FC = () =>{
     const [isLoading, setIsLoading] = useState(true)
 
     const [dummyState, setDummyState] = useState(null)
+    const [isCsrf, setIsCsrf] = useState(null)
 
     const[Firstname, setFirstName] = useState('')
     const[Lastname, setLastName] = useState('')
@@ -50,6 +51,26 @@ export const PatientPage: React.FC = () =>{
         .catch((err)=>{
             alert(err.data)
             navigate('/login')
+        })
+    }
+
+    const getCSRF = () => {
+        axios.get(serverUrl + 'api/csrf/', { withCredentials: true })
+        .then((res) => {
+            const csrfToken = res.headers.get('X-CSRFToken')
+            setIsCsrf(csrfToken)
+        })
+        .catch((err) => console.error(err))
+    }
+
+
+    const getPredict = () => {
+        axios.get(serverUrl+'api/diagnose_predict/', {
+            params: {
+                "pol" : curPatient['gender']
+            }
+        }).then((res)=>{
+            alert(JSON.stringify(res))
         })
     }
 
@@ -96,13 +117,10 @@ export const PatientPage: React.FC = () =>{
             //alert()
         }
 
-// Output or use the collected nested elements
-console.log(allNestedElements);
+        // Output or use the collected nested elements
+        console.log(allNestedElements);
     }
     
-    const test = (st) =>{
-        
-    }
 
     const hideFilter = () => {
         var filterElement = document.getElementsByClassName("gn-settings-search gn-settings__search");
@@ -117,6 +135,11 @@ console.log(allNestedElements);
         }
     }
 
+    function onPredictClick(e){
+        alert(curPatient['gender'])
+        getPredict()
+    }
+
 
 
     useEffect(()=>{   
@@ -125,6 +148,7 @@ console.log(allNestedElements);
         hideFilter()
         change_header()
         change_tap_style()
+        // get_session()
     },[isLoading, dummyState])
 
     const formatPhoneNumber = (number) => {
@@ -181,7 +205,7 @@ return (
                     <h1>Случай амбулаторного посещения №112345</h1>
                 </div>
                 <Settings title={curPatient['last_name']+" "+curPatient['first_name'] + " "+curPatient['patronym']} 
-                onPageChange={test} showRightAdornmentOnHover={true}
+                 showRightAdornmentOnHover={true}
                 filterPlaceholder="Найти параметр">
     
                     <Settings.Group id="main" groupTitle="Параметры пациента">
@@ -422,7 +446,7 @@ return (
                                 <Settings.Section title="">
                                     <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
                                         <TextInput/>
-                                        <Button children={"Поставить диагноз"} view="action"/>
+                                        <Button children={"Поставить диагноз"} view="action" onClick={onPredictClick}/>
                                     </div>
                                 </Settings.Section>                                
                             </Settings.Item>
@@ -444,13 +468,6 @@ return (
                                     <Select.Option value="first_time">Клиническая смерть</Select.Option>
                                 </Select>
                             </Settings.Item>
-
-                            <Settings.Item title="Клинический диагноз">
-                                <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
-                                    <TextInput/>
-                                </div>                                
-                            </Settings.Item>
-
                                 <Button view="outlined-success" children="Закрыть случай" size="l"/>
                                 <Button view="outlined-info" children="Получить  справку" size="l"/>
                             </Settings.Section>
@@ -504,65 +521,8 @@ return (
                                 </Settings.Item>
                                 
                             </Settings.Section>
-
-
-
-                            
                         </Settings.Page>
-
-                        
-    {/* 
-                        <Settings.Page title="Витальные параметры">
-                                <Settings.Section title="">
-                                    <Settings.Item title="Рост">
-                                        <TextInput />
-                                    </Settings.Item>
-
-                                    <Settings.Item title="Вес">
-                                        <TextInput />
-                                    </Settings.Item>
-                                    
-                                    <Settings.Item title="Температура">
-                                        <TextInput />
-                                    </Settings.Item>
-                                </Settings.Section>
-                        </Settings.Page> */}
-                    
-                    </Settings.Group>
-
-                    {/* <Settings.Group groupTitle="ЭМК">
-
-                        
-
-                        <Settings.Page title="Осмотр">
-                            <Settings.Section title="Осмотр пациента">       
-                                <TextArea minRows={20} 
-                                defaultValue={planStr}/>
-                                <Button view="outlined-success" children="Сохранить" size="l"/>
-                            </Settings.Section>
-                        </Settings.Page>
-                    </Settings.Group> */}
-
-                    
-                    {/* <Settings.Group groupTitle="Посещение пациента">
-                        <Settings.Page title="Посещение">
-                        <Settings.Section title="">
-                            <Settings.Item title="Дата и время приема">
-                                <DatePicker format="D MMM , YYYY H:mm" defaultValue={dateTime()}/>
-                            </Settings.Item>
-                            <Settings.Item title="Врач">
-                                <p>{Lastname} {Firstname}</p>
-                            </Settings.Item>
-                            <Settings.Item title="Отделение">
-                                <p>Гематология</p>
-                            </Settings.Item>
-
-                            
-                            
-                            <Button view="outlined-success" children="Закрыть случай" size="l"/>
-                        </Settings.Section>
-                        </Settings.Page>
-                    </Settings.Group> */}
+                        </Settings.Group>
                 </Settings>
             </div>  
         )}           
