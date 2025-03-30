@@ -1,3 +1,4 @@
+# Установка 
 Запуситить Django сервер
 ```
 python -m venv .venv
@@ -16,3 +17,14 @@ npm run dev
 Перейти на страницу 
 
 <http://localhost:5173>
+
+# Скриншоты
+
+## Логин
+![login_page.png](project_presentation/login_page.png)
+
+## Главная страница
+![home_page.png](project_presentation/home_page.png)
+
+## Страница пациента
+![patient_page.png](project_presentation/patient_page.png)
