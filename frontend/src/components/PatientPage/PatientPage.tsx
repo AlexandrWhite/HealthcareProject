@@ -14,6 +14,7 @@ import './PatientPage.scss';
 
 import {dateTime, settings, UtcTimeZone} from '@gravity-ui/date-utils';
 import { normalizeTimeZone } from "@gravity-ui/date-utils/build/timeZone";
+import { ValidTextInput } from "../ValidTextInput/ValidTextInput";
 
 // Locales management
 settings.getLocale(); // default locale "en"
@@ -261,9 +262,7 @@ return (
                                 </Settings.Section>
 
 
-                                
-                               
-
+                            
 
                                 <Settings.Item title="Лабораторные исследования">    
                                     <Button view="outlined-info" onClick={() => setOpen(true)}>
@@ -478,16 +477,16 @@ return (
                         <Settings.Page title="Опрос пациента">
 
                             <Settings.Section title="Витальные параметры">
-                                <Settings.Item title="Рост">
-                                    <TextInput/>
+                                <Settings.Item title="Рост (см)">
+                                    <ValidTextInput type="number"/>
                                 </Settings.Item>
 
-                                <Settings.Item title="Вес">
-                                    <TextInput/>
+                                <Settings.Item title="Вес (кг)">
+                                    <ValidTextInput type="number"/>
                                 </Settings.Item>
                                 
-                                <Settings.Item title="Температура">
-                                    <TextInput />
+                                <Settings.Item title="Температура (C)">
+                                    <ValidTextInput type="number"/>
                                 </Settings.Item>
                             </Settings.Section>
 
