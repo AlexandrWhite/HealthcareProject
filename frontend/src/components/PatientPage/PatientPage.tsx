@@ -41,6 +41,22 @@ export const PatientPage: React.FC = () =>{
     const navigate = useNavigate();
     const myRef = useRef(null);
 
+
+    const [inputWeight, setInputWeight] = useState<string|undefined>(undefined);
+    function handleWeightChange (text: string) {
+        setInputWeight(text);
+    };
+
+    const [inputHeight, setInputHeight] = useState<string|undefined>(undefined);
+    function handleHeightChange (text: string) {
+        setInputHeight(text);
+    };
+
+    const [inputTemperature, setInputTemperature] = useState<string|undefined>(undefined);
+    function handleTemperatureChange (text: string) {
+        setInputTemperature(text);
+    };
+
     const getPatient = () =>{
         axios.get(serverUrl+'/api/patient/'+patientId,{
             withCredentials:true
@@ -68,7 +84,8 @@ export const PatientPage: React.FC = () =>{
     const getPredict = () => {
         axios.get(serverUrl+'api/diagnose_predict/', {
             params: {
-                "pol" : curPatient['gender']
+                "pol" : curPatient['gender'],
+                "ves" : inputWeight
             }
         }).then((res)=>{
             alert(JSON.stringify(res))
@@ -230,9 +247,7 @@ return (
                                 </Settings.Item>
                                 <Settings.Item title="Телефон">
                                     <p>
-                                    {
-                                        formatPhoneNumber(curPatient['phone_number'])
-                                    }
+                                    {formatPhoneNumber(curPatient['phone_number'])}
                                     </p>
                                 </Settings.Item>
                                 <Settings.Item title="Номер страхового полиса">
@@ -252,17 +267,11 @@ return (
                                 <Settings.Item title="Отделение">
                                     <p>Гематология</p>
                                 </Settings.Item>
-
-                                
-
                                 
                                 <Settings.Section title="Осмотр пациента">       
                                     <TextArea minRows={20} 
                                     defaultValue={planStr}/>
                                 </Settings.Section>
-
-
-                            
 
                                 <Settings.Item title="Лабораторные исследования">    
                                     <Button view="outlined-info" onClick={() => setOpen(true)}>
@@ -478,15 +487,15 @@ return (
 
                             <Settings.Section title="Витальные параметры">
                                 <Settings.Item title="Рост (см)">
-                                    <ValidTextInput type="number"/>
+                                    <ValidTextInput value={inputHeight} onChange={handleHeightChange} type="number"/>
                                 </Settings.Item>
 
                                 <Settings.Item title="Вес (кг)">
-                                    <ValidTextInput type="number"/>
+                                    <ValidTextInput value={inputWeight} onChange={handleWeightChange} type="number"/>
                                 </Settings.Item>
                                 
                                 <Settings.Item title="Температура (C)">
-                                    <ValidTextInput type="number"/>
+                                    <ValidTextInput value={inputTemperature} onChange={handleTemperatureChange} type="number"/>
                                 </Settings.Item>
                             </Settings.Section>
 

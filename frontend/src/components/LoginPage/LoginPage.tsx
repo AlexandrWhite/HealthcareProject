@@ -24,7 +24,7 @@ export const LoginPage: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false)
     const {username, setUsername} = useContext(AuthContext)
     const [isCsrf, setIsCsrf] = useState(null)
-
+    
     const [isLogin, setIsLogin] = useState('')
     const [isPassword, setIsPassword] = useState('')
     const [isErrorMessageVisible, setIsErrorMessageVisible] = useState(false)
