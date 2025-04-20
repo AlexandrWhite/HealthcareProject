@@ -93,6 +93,9 @@ def kill_all_sessions(request):
 def diagnose_predict(request):
     pol = request.GET.get('pol')
     ves = request.GET.get('ves')
-    print(f"pol {pol}, ves {ves}")
+    travma = request.GET.get('travma')
+    
+    for key, value in request.GET.items():
+        print(key, value)
     return JsonResponse({'result':'Результат вашей болезни'})
     

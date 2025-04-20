@@ -30,7 +30,6 @@ export const PatientPage: React.FC = () =>{
     const [curPatient,setCurPatient] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
 
-    const [dummyState, setDummyState] = useState(null)
     const [isCsrf, setIsCsrf] = useState(null)
 
     const[Firstname, setFirstName] = useState('')
@@ -57,6 +56,12 @@ export const PatientPage: React.FC = () =>{
         setInputTemperature(text);
     };
 
+    const [inputTravma, setInputTravma] = useState<string|undefined>(undefined);
+    const [inputOnko, setInputOnko] = useState<string|undefined>(undefined);
+    const [inputInfec, setInputInfec] = useState<string|undefined>(undefined);
+    const [inputUzi, setInputUzi] = useState<string|undefined>(undefined);
+    const [inputNasled, setInputNasled] = useState<string|undefined>(undefined);
+    
     const getPatient = () =>{
         axios.get(serverUrl+'/api/patient/'+patientId,{
             withCredentials:true
@@ -85,7 +90,12 @@ export const PatientPage: React.FC = () =>{
         axios.get(serverUrl+'api/diagnose_predict/', {
             params: {
                 "pol" : curPatient['gender'],
-                "ves" : inputWeight
+                "ves" : inputWeight,
+                "travma" : inputTravma,
+                "onko": inputOnko,
+                "infec": inputInfec,
+                "uzi": inputUzi,
+                "nasled": inputNasled
             }
         }).then((res)=>{
             alert(JSON.stringify(res))
@@ -167,7 +177,7 @@ export const PatientPage: React.FC = () =>{
         change_header()
         change_tap_style()
         // get_session()
-    },[isLoading, dummyState])
+    },[isLoading])
 
     const formatPhoneNumber = (number) => {
         const cleaned = ('' + number).replace(/\D/g, '');
@@ -501,30 +511,41 @@ return (
 
                             <Settings.Section title="Опрос">
                                 <Settings.Item title="Наличие кровотечения">
-                                    <Select width={170}>
-                                        <Select.Option value="yes">Да</Select.Option>
-                                        <Select.Option value="no">Нет</Select.Option>
+                                    <Select width={350}  value={[inputTravma ?? ""]} onUpdate={(value) => setInputTravma(value[0])}>
+                                        <Select.Option value="1">Да</Select.Option>
+                                        <Select.Option value="0">Нет</Select.Option>
                                     </Select>
                                 </Settings.Item>
 
                                 <Settings.Item title="Наличие на момент обследования восполительных заболеваний, онкологий">
-                                    <Select width={170}>
-                                        <Select.Option value="yes">Да</Select.Option>
-                                        <Select.Option value="no">Нет</Select.Option>
+                                    <Select width={350} value={[inputOnko ?? ""]} onUpdate={(value) => setInputOnko(value[0])}>
+                                        <Select.Option value="1">Да</Select.Option>
+                                        <Select.Option value="0">Нет</Select.Option>
                                     </Select>
                                 </Settings.Item>
 
                                 <Settings.Item title="Инфекции, переливание крови, отравление, интоксикация">
-                                    <Select width={170}>
-                                        <Select.Option value="yes">Да</Select.Option>
-                                        <Select.Option value="no">Нет</Select.Option>
+                                    <Select width={350} value={[inputInfec ?? ""]} onUpdate={(value) => setInputInfec(value[0])}>
+                                        <Select.Option value="1">Да</Select.Option>
+                                        <Select.Option value="0">Нет</Select.Option>
                                     </Select>
                                 </Settings.Item>
 
                                 <Settings.Item title="Результат ультразвукового исследования">
-                                    <Select width={170}>
-                                        <Select.Option value="yes">Отклонения есть</Select.Option>
-                                        <Select.Option value="no">Отклонениий нет</Select.Option>
+                                    <Select width={350} value={[inputUzi ?? ""]} onUpdate={(value) => setInputUzi(value[0])}>
+                                        <Select.Option value="1">Отклонения есть</Select.Option>
+                                        <Select.Option value="0">Отклонениий нет</Select.Option>
+                                    </Select>
+                                </Settings.Item>
+
+                                <Settings.Item title="Наследставенность">
+                                    <Select width={350} value={[inputNasled ?? ""]} onUpdate={(value) => setInputNasled(value[0])}>
+                                        <Select.Option value="0">D56.4 Наследственное персистирование фетального гемоглобина [НПФГ]</Select.Option>
+                                        <Select.Option value="1">D57.3 Носительство признака серповидно-клеточности</Select.Option>
+                                        <Select.Option value="2">D58.0 Наследственный сфероцитоз</Select.Option>
+                                        <Select.Option value="3">D58.1 Наследственный эллиптоцитоз</Select.Option>
+                                        <Select.Option value="4">D58.8 Другие уточненные наследственные гемолитические анемии</Select.Option>
+                                        <Select.Option value="5">D58.9 Наследственная гемолитическая анемия неуточненная</Select.Option>
                                     </Select>
                                 </Settings.Item>
                                 
