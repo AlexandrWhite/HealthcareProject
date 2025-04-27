@@ -41,22 +41,6 @@ export const PatientPage: React.FC = () =>{
     const navigate = useNavigate();
     const myRef = useRef(null);
 
-
-    
-    function handleWeightChange (text: string) {
-        setInputWeight(text);
-    };
-
-    const [inputHeight, setInputHeight] = useState<string|undefined>(undefined);
-    function handleHeightChange (text: string) {
-        setInputHeight(text);
-    };
-
-    const [inputTemperature, setInputTemperature] = useState<string|undefined>(undefined);
-    function handleTemperatureChange (text: string) {
-        setInputTemperature(text);
-    };
-
    
     const [analysis, setAnalysis] = useState({});
 
@@ -800,7 +784,6 @@ return (
                                            
                                             
                                             if(errorMsg !== ""){
-                                                console.log("asdasd");
                                                 add({
                                                     title: 'Допущены ошибки в данных',
                                                     name: "s",
@@ -810,14 +793,13 @@ return (
                                                 });
                                             }else{
                                                 removeAll();
-                                                console.log("succ");
+                                                getPredict();
                                                 add({
                                                     title: 'Данные успешно отправлены',
                                                     name: "s",
                                                     theme: "success"
                                                 });
-                                            }
-                                            
+                                            } 
                                         }
                                     } 
                                     view="outlined-success" 
