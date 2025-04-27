@@ -26,6 +26,7 @@ export const ValidTextInput: React.FC<{
     return (
         <div style={{ height: 30 }}>
             <TextInput
+                required
                 type={type}
                 value={value} // Присваиваем переданное значение
                 onUpdate={noEmpty}

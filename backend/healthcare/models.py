@@ -22,6 +22,9 @@ class Visit(models.Model):
     investigationName = models.CharField(max_length=255)
     investigationResult = models.TextField()
     investigationDate = models.DateField()
+    visitResult = models.TextField(blank=True, null=True) 
 
     def __str__(self):
         return f"Visit of {self.patientID} on {self.investigationDate}"
+
+

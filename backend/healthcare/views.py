@@ -8,7 +8,9 @@ from django.contrib.sessions.models import Session
 from rest_framework.renderers import JSONRenderer
 
 from .serializers import PatientSerializer
+from .serializers import VisitSerializer
 from .models import Patient
+from .models import Visit
 
 # Декоратор для выдачи ошибки если пользователь неавторизован
 def json_login_required(view_func):
@@ -78,6 +80,13 @@ def test(request,id):
     my_object = Patient.objects.filter(pk=id).first()
     return JsonResponse(PatientSerializer(my_object).data)
 
+@json_login_required
+def get_analysis(request):
+    visits = Visit.objects.filter(tapID="123765")
+    serialized = VisitSerializer(visits, many=True) 
+    return JsonResponse(serialized.data, safe=False)
+
+
 
 
 # Удаление всех сессий из БД
@@ -88,7 +97,6 @@ def kill_all_sessions(request):
     sessions.delete()
 
     return JsonResponse({'detail': 'Сессии успешно завершены'})
-
 
 def diagnose_predict(request):
     pol = request.GET.get('pol')

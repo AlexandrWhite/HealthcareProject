@@ -10,5 +10,6 @@ urlpatterns = [
    path('session/', views.session_view, name='api-session'),
    path('user_info/', views.user_info, name='api-userInfo'),
    path('kill_all_sessions/', views.kill_all_sessions, name='kill-all-sessions'),
-   path('diagnose_predict/', views.diagnose_predict,name='api-predict')
+   path('diagnose_predict/', views.diagnose_predict,name='api-predict'),
+   path("get_analysis/", views.get_analysis, name="get-analysis")
 ]
