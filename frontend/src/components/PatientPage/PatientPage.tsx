@@ -60,10 +60,91 @@ export const PatientPage: React.FC = () =>{
     }
 
 
+    function check_values(){
+        var errorMsg = ``;
+
+        if(natureDeseaseValue===undefined){
+            errorMsg += `Характер заболевания\n`;
+            setNatureDeseaseValid("invalid");
+        }
+
+        if(patientStateValue===undefined){
+            errorMsg += `Состояние пациента\n`;
+            setPatientStateValid("invalid");
+        }
+        if(travmaValue === undefined){
+            errorMsg += `Наличие кровотечения\n`;
+            setTravmaValid("invalid");
+        }
+
+        if(onkoValue === undefined){
+            errorMsg += `Наличие онкологий\n`;
+            setOnkoValid("invalid");
+        }
+
+        if(infecValue === undefined){
+            errorMsg += `Инфекции\n`;
+            setInfecValid("invalid");
+        }
+        if(uziValue === undefined){
+            errorMsg += `Результат ультразвукового исследования\n`;
+            setUziValid("invalid");
+        }
+        if(nasledValue === undefined){
+            errorMsg += `Наследставенность\n`;
+            setNasledValid("invalid");
+        }
+        if(weightValue==undefined || weightValue===""){
+            errorMsg += `Вес\n`;
+            setWeightValid("invalid");
+        }
+
+        if(temperatureValue==undefined || temperatureValue===""){
+            errorMsg += `Температура\n`;
+            setTemperatureValid("invalid");
+        }
+
+        if(heightValue==undefined || heightValue===""){
+            errorMsg += `Рост\n`;
+            setHeightValid("invalid");
+        }
+
+        const MyComponent = () => (
+            <div style={{ whiteSpace: 'pre-line' }}>
+              {errorMsg}
+            </div>
+        );
+       
+        
+        if(errorMsg !== ""){
+            add({
+                title: 'Допущены ошибки в данных',
+                name: "s",
+                theme: "danger",
+                content: <MyComponent/>,
+                autoHiding:false
+            });
+            return false;
+        }else{
+            removeAll();
+            getPredict();
+            add({
+                title: 'Данные успешно отправлены',
+                name: "s",
+                theme: "success"
+            });
+            return true;
+        } 
+    }
+    
+
 
     const getAnalysis = () =>{
         axios.get(serverUrl+'api/get_analysis/',{
-            withCredentials:true
+            withCredentials:true,
+            params:{
+                "tapID":123765,
+            }
         })
         .then((res)=>{
             
@@ -102,10 +183,12 @@ export const PatientPage: React.FC = () =>{
         .catch((err) => console.error(err))
     }
 
+    const [aiDiagnose, setAiDiagnose] = useState<string | undefined>(undefined);
 
     const getPredict = () => {
         axios.get(serverUrl+'api/diagnose_predict/', {
             params: {
+                "tap": analysis["Kumbs"].tapID,
                 "pol" : curPatient['gender'],
                 "ves" : weightValue,
                 "travma" : travmaValue,
@@ -115,7 +198,13 @@ export const PatientPage: React.FC = () =>{
                 "nasled": nasledValue
             }
         }).then((res)=>{
-            alert(JSON.stringify(res))
+            // add({
+            //     title: 'Прогноз модели',
+            //     name: "s1",
+            //     content: res.data.result,
+            //     theme: "success"
+            // });
+            setAiDiagnose(res.data.result);
         })
     }
 
@@ -183,8 +272,9 @@ export const PatientPage: React.FC = () =>{
     }
 
     function onPredictClick(e){
-        alert(curPatient['gender'])
-        getPredict()
+        if (check_values()){
+            getPredict()
+        }
     }
 
 
@@ -712,7 +802,7 @@ return (
                                 <Settings.Item title="Основной диагноз">
                                 <Settings.Section title="">
                                     <div style={{ width:370, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: "10px" }}>
-                                        <TextInput/>
+                                        <TextInput value={aiDiagnose ?? ""}   onUpdate={(value) => {setAiDiagnose(value)}}/>
                                         <Button children={"Поставить диагноз"} view="action" onClick={onPredictClick}/>
                                     </div>
                                 </Settings.Section>                                
@@ -726,82 +816,7 @@ return (
                                 {patientStateSelect}
                             </Settings.Item>
                                 <Button 
-                                    onClick={
-                                        function(){
-                                            var errorMsg = ``;
-
-                                            if(natureDeseaseValue===undefined){
-                                                errorMsg += `Характер заболевания\n`;
-                                                setNatureDeseaseValid("invalid");
-                                            }
-
-                                            if(patientStateValue===undefined){
-                                                errorMsg += `Состояние пациента\n`;
-                                                setPatientStateValid("invalid");
-                                            }
-                                            if(travmaValue === undefined){
-                                                errorMsg += `Наличие кровотечения\n`;
-                                                setTravmaValid("invalid");
-                                            }
-
-                                            if(onkoValue === undefined){
-                                                errorMsg += `Наличие онкологий\n`;
-                                                setOnkoValid("invalid");
-                                            }
-
-                                            if(infecValue === undefined){
-                                                errorMsg += `Инфекции\n`;
-                                                setInfecValid("invalid");
-                                            }
-                                            if(uziValue === undefined){
-                                                errorMsg += `Результат ультразвукового исследования\n`;
-                                                setUziValid("invalid");
-                                            }
-                                            if(nasledValue === undefined){
-                                                errorMsg += `Наследставенность\n`;
-                                                setNasledValid("invalid");
-                                            }
-                                            if(weightValue==undefined || weightValue===""){
-                                                errorMsg += `Вес\n`;
-                                                setWeightValid("invalid");
-                                            }
-
-                                            if(temperatureValue==undefined || temperatureValue===""){
-                                                errorMsg += `Температура\n`;
-                                                setTemperatureValid("invalid");
-                                            }
-
-                                            if(heightValue==undefined || heightValue===""){
-                                                errorMsg += `Рост\n`;
-                                                setHeightValid("invalid");
-                                            }
-
-                                            const MyComponent = () => (
-                                                <div style={{ whiteSpace: 'pre-line' }}>
-                                                  {errorMsg}
-                                                </div>
-                                            );
-                                           
-                                            
-                                            if(errorMsg !== ""){
-                                                add({
-                                                    title: 'Допущены ошибки в данных',
-                                                    name: "s",
-                                                    theme: "danger",
-                                                    content: <MyComponent/>,
-                                                    autoHiding:false
-                                                });
-                                            }else{
-                                                removeAll();
-                                                getPredict();
-                                                add({
-                                                    title: 'Данные успешно отправлены',
-                                                    name: "s",
-                                                    theme: "success"
-                                                });
-                                            } 
-                                        }
-                                    } 
+                                    onClick={check_values}
                                     view="outlined-success" 
                                     children="Закрыть случай" 
                                     size="l"/>

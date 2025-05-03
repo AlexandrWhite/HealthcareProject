@@ -82,7 +82,8 @@ def test(request,id):
 
 @json_login_required
 def get_analysis(request):
-    visits = Visit.objects.filter(tapID="123765")
+    tapID = request.GET.get("tapID")
+    visits = Visit.objects.filter(tapID=tapID)
     serialized = VisitSerializer(visits, many=True) 
     return JsonResponse(serialized.data, safe=False)
 
@@ -98,6 +99,8 @@ def kill_all_sessions(request):
 
     return JsonResponse({'detail': 'Сессии успешно завершены'})
 
+import pandas as pd
+import pickle
 def diagnose_predict(request):
     codes = [
         "D50.9 Железодефицитная анемия неуточненная",
@@ -119,7 +122,55 @@ def diagnose_predict(request):
     ves = request.GET.get('ves')
     travma = request.GET.get('travma')
     
-    for key, value in request.GET.items():
-        print(key, value)
-    return JsonResponse({'result':'Результат вашей болезни'})
+    visits = Visit.objects.filter(tapID=request.GET.get("tap"))
+    analyses = {}
+
+    for visit in visits:
+        analyses[visit.investigationName] = visit.investigationResult
+
+    cols = ["pol", "ves", "travma", "onko", "infec", "uzi", "nasled",
+        "HGB", "erit", "leik", "PLT", "gematok", "MCH", "MCHC", "MCV",
+        "pokazatel", "Fe", "OZSS", "Ferrit", "B12", "billirubin", "belok",
+        "folievay", "albumin", "mielogramma", "Kumbs"
+    ]
+
+    gender = 0 if request.GET.get('pol')=="жен" else 1
+    weight = float(request.GET.get('ves'))/100
+    array = pd.DataFrame([
+        [gender, #Пол
+        weight, #Вес
+        request.GET.get('travma'), #травма 
+        request.GET.get('onko'), #онко +
+        request.GET.get('infec'), #инфекция +  
+        request.GET.get('uzi'), #узи +
+        request.GET.get('nasled'), #наследст +
+        analyses["HGB"], #HGB Исследование уровня общего гемоглобина в крови
+        analyses["erit"], # erit Исследование уровня эритроцитов в крови
+        analyses["leik"], # leik Исследование уровня лейкоцитов в крови
+        analyses["PLT"], #PLT Исследование уровня тромбоцитов в крови
+        analyses["gematok"], #gematok Оценка гематокрита
+        analyses["MCH"], #MCH Определение среднего содержания гемоглобина в эритроцитах (MCH)	
+        analyses["MCHC"],	#MCHC Средняя концентрация гемоглобина в эритроцитах (MCHC)
+        analyses["MCV"], #MCV Средний объем эритроцитов (MCV)
+        analyses["pokazatel"], #Цветовой показатель
+        analyses["Fe"], #Fe Исследование уровня железа в сыворотке крови
+        analyses["OZSS"], #OZSS Исследование железосвязывающей способности сыворотки (ОЖСС)
+        analyses["Ferrit"], #Ferrit Исследование уровня ферритина в крови
+        analyses["B12"], #B12 Определение уровня витамина B12 (цианокобаламин) в крови
+        analyses["billirubin"], #billirubin Исследование уровня общего билирубина в крови
+        analyses["belok"], #belok Исследование уровня общего белка в крови
+        analyses["folievay"], #folievay Исследование уровня фолиевой кислоты в сыворотке крови
+        analyses["albumin"], #albumin Исследование уровня альбумина в крови
+        analyses["mielogramma"], #mielogramma (миелограмма)
+        analyses["Kumbs"] #Прямой антиглобулиновый тест (прямая проба Кумбса) 
+        ], 
+    ],columns=cols)
+    
+
+    with open("ml/model.pkl", "rb") as f:
+        model = loaded_model = pickle.load(f)
+        res = model.predict(array)
+        result = codes[res[0]-1]
+
+    return JsonResponse({'result':result})
     
